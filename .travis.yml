@@ -1,0 +1,11 @@
+sudo: true
+language: ruby
+services:
+  - docker
+
+before_install:
+- docker pull maven
+- docker run -d maven /bin/sh -c "git clone https://github.com/geoserver/geoserver.git"
+
+script:
+- docker run -d maven /bin/sh -c "mvn -f src/pom.xml -B -U -T4 -fae -Prelease clean install && mvn -f src/community/pom.xml -B -U -T4 -fae -DskipTests -Prelease -PcommunityRelease clean install"
